@@ -1,2 +1,2 @@
 # kaggle-competitions
-Machine Learning Solutions for Kaggle competitions
+Machine Learning solutions for kaggle competitions
