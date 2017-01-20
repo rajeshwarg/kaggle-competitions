@@ -2,6 +2,7 @@ from __future__ import division
 from scripts.read_data import *
 from scripts.prepareFeatures import *
 from scripts.selectFeatures import *
+from scripts.algorithms import *
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 from sklearn.model_selection import KFold
