@@ -3,6 +3,8 @@ from scripts.read_data import *
 from scripts.prepareFeatures import *
 from scripts.selectFeatures import *
 from scripts.algorithms import *
+from scripts.calculateAccuracy import *
+from scripts.saveResults import *
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 from sklearn.model_selection import KFold
@@ -14,38 +16,28 @@ from sklearn.ensemble import GradientBoostingClassifier
 train_data, test_data = readData()
 train_data, test_data = prepareFeatures(train_data, test_data)
 
-predictors = ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked", "NameLength", "FamilySize"]
+predictors = ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked", "NameL", "FSize"]
 
-algorithms = [
-    [GradientBoostingClassifier(random_state=1, n_estimators=25, max_depth=3), predictors]
-    #[LogisticRegression(random_state=1), predictors]
-]
-kf = KFold(n_splits=3)
-predictions = []
-for alg, predictors in algorithms:
-    for train, test in kf.split(train_data):
-        train_predictors = (train_data[predictors].iloc[train, :])
-        train_target = train_data["Survived"].iloc[train]
-        alg.fit(train_predictors, train_target)
-        test_predictions = alg.predict(train_data[predictors].iloc[test, :])
-        predictions.append(test_predictions)
+linearRegression(train_data[predictors], train_data["Survived"])
+logisticRegression(train_data[predictors], train_data["Survived"])
+gradientboostingClassifier(train_data[predictors], train_data["Survived"])
+svmClassifier(train_data[predictors], train_data["Survived"])
+randomforestClassifier(train_data[predictors], train_data["Survived"])
+neuralNetwork(train_data[predictors], train_data["Survived"])
 
-# Calculate the accuracy of the model
-#predictions = (full_predictions[0] * 3 + full_predictions[1]) / 4
-predictions = np.concatenate(predictions, axis=0)
-predictions[predictions > .5] = 1
-predictions[predictions <= .5] = 0
-predictions = predictions.astype(int)
-match = (predictions == train_data["Survived"])
-match_df = pd.DataFrame({'match':match})
-match_count = len(match_df[match_df['match'] == 1])
-accuracy = (match_count/predictions.size)
-print "Accuracy of the model is: ", accuracy
+calculateAccuracy(train_data, predictors, "Survived", 3, 'linear_regression')
+calculateAccuracy(train_data, predictors, "Survived", 3, 'logistic_regression')
+calculateAccuracy(train_data, predictors, "Survived", 3, 'gradient_boosting_classifier')
+calculateAccuracy(train_data, predictors, "Survived", 3, 'svm_classifier')
+calculateAccuracy(train_data, predictors, "Survived", 3, 'random_forest_classifier')
+#calculateAccuracyNeuralNetwork(train_data, predictors, "Survived", 3, 'neural_networks')
 
-
-#train_X = selectFeatures(train_data, predictors, target_col="Survived", feature_count=5)
-
-
+saveResults('linear_regression', test_data, predictors)
+saveResults('logistic_regression', test_data, predictors)
+saveResults('gradient_boosting_classifier', test_data, predictors)
+saveResults('svm_classifier', test_data, predictors)
+saveResults('random_forest_classifier', test_data, predictors)
+saveResultsNeuralNetworks('neural_networks', test_data, predictors)
 
 
 

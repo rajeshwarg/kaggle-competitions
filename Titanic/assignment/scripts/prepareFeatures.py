@@ -21,10 +21,10 @@ def prepareFeatures(train_data, test_data):
     test_data.loc[test_data["Embarked"] == "C", "Embarked"] = 1
     test_data.loc[test_data["Embarked"] == "Q", "Embarked"] = 2
     
-    train_data["NameLength"] = train_data["Name"].apply(lambda x: len(x))
-    test_data["NameLength"] = test_data["Name"].apply(lambda x: len(x))
+    train_data["NameL"] = train_data["Name"].apply(lambda x: len(x))
+    test_data["NameL"] = test_data["Name"].apply(lambda x: len(x))
 
-    train_data["FamilySize"] = train_data["SibSp"] + train_data["Parch"]
-    test_data["FamilySize"] = test_data["SibSp"] + test_data["Parch"]
+    train_data["FSize"] = train_data["SibSp"] + train_data["Parch"]
+    test_data["FSize"] = test_data["SibSp"] + test_data["Parch"]
 
     return train_data, test_data
